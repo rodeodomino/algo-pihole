@@ -6,9 +6,9 @@ This is a fork of [@trailofbits](https://github.com/trailofbits) amazing work wi
 
 In addition to installing Pi-hole, it:
 
-* Automatically sets up @mmotti's [Fetch Filter Lists](https://github.com/mmotti/pihole-filter-lists) and [Gravity Optimise](https://github.com/mmotti/pihole-gravity-optimise) scripts
+* Automatically sets up [@mmotti](https://github.com/mmotti)'s [Fetch Filter Lists](https://github.com/mmotti/pihole-filter-lists) and [Gravity Optimise](https://github.com/mmotti/pihole-gravity-optimise) scripts
 * Checks for Pi-hole updates
-* Includes a prebuilt whitelist, blacklist, regex, and adlist (available for you to edit) based off of @WaLLy3K and @mmoti's work.
+* Includes a prebuilt whitelist, blacklist, regex, and adlist (available for you to edit) based off of [@WaLLy3K](https://v.firebog.net/hosts/lists.php) and [@mmotti](https://github.com/mmotti)'s work.
 * Creates extra users for full-tunneling and split-tunneling
 * Includes a new port to try to guard against VPN blocking
 
@@ -225,6 +225,7 @@ After this process completes, the Algo VPN server will contain only the users li
   - Configure [Azure](docs/cloud-azure.md)
   - Configure [DigitalOcean](docs/cloud-do.md)
   - Configure [Google Cloud Platform](docs/cloud-gce.md)
+  - Configure [Vultr](docs/cloud-vultr.md)
 * Advanced Deployment
   - Deploy to your own [FreeBSD](docs/deploy-to-freebsd.md) server
   - Deploy to your own [Ubuntu 18.04](docs/deploy-to-ubuntu.md) server
