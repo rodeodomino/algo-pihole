@@ -17,7 +17,7 @@ For split tunnel, simply replace `0.0.0.0/0, ::0/0` with `172.16.0.1/32, fcaa::1
 Split tunnel caveats:
 
 * This appears to work, but I need your help to confirm.
-* I would like to automate the .conf file generation to track for a word in the user name and adjust the AllowedIPs accordingly (e.g., user phone-full would have AllowedIPs of 0.0.0.0/0 while phone-pihole would have 172.16.0.1/32). If you know how to do that, please let me know.
+* I would like to automate the .conf file generation to track for a word in the user name and adjust the `AllowedIPs` accordingly (e.g., user phone-full would have `AllowedIPs` of `0.0.0.0/0` while `phone-pihole` would have `172.16.0.1/32`). If you know how to do that, please let me know.
 * I cannot figure out how to do this for IPSEC, so only working on Wireguard for now.
 
 ----------------
