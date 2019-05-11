@@ -73,8 +73,8 @@
   timezone:
     name: America/New_York
 
-- pause:
-    prompt: "Pause to account for CPU bursting"
+- name: Pause to account for CPU bursting
+  pause:
     seconds: 30
 
 - meta: flush_handlers
