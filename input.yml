@@ -4,7 +4,7 @@
   tags: always
   vars:
     defaults:
-      server_name: algo
+      server_name: algo-pihole
       ondemand_cellular: false
       ondemand_wifi: false
       local_dns: false
@@ -96,14 +96,6 @@
           when: store_cakey is undefined
         when: ipsec_enabled
 
-      - name: DNS adblocking prompt
-        pause:
-          prompt: |
-            Do you want to install an ad blocking DNS resolver on this VPN server?
-            [y/N]
-        register: _local_dns
-        when: local_dns is undefined
-
       - name: SSH tunneling prompt
         pause:
           prompt: |
@@ -133,10 +125,7 @@
             {%- elif _ondemand_wifi_exclude.user_input is defined and _ondemand_wifi_exclude.user_input|length > 0 -%}
             {{ _ondemand_wifi_exclude.user_input | b64encode }}
             {%- else %}{{ '_null' | b64encode }}{% endif %}
-          algo_local_dns: >-
-            {% if local_dns is defined %}{{ local_dns | bool }}
-            {%- elif _local_dns.user_input is defined %}{{ booleans_map[_local_dns.user_input] | default(defaults['local_dns']) }}
-            {%- else %}false{% endif %}
+          algo_local_dns: true
           algo_ssh_tunneling: >-
             {% if ssh_tunneling is defined %}{{ ssh_tunneling | bool }}
             {%- elif _ssh_tunneling.user_input is defined %}{{ booleans_map[_ssh_tunneling.user_input] | default(defaults['ssh_tunneling']) }}

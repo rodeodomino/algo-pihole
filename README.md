@@ -9,16 +9,11 @@ In addition to installing Pi-hole, it:
 * Automatically sets up [@mmotti](https://github.com/mmotti)'s [Fetch Filter Lists](https://github.com/mmotti/pihole-filter-lists) and [Gravity Optimise](https://github.com/mmotti/pihole-gravity-optimise) scripts
 * Checks for Pi-hole updates
 * Includes a prebuilt whitelist, blacklist, regex, and adlist (available for you to edit) based off of [@WaLLy3K](https://v.firebog.net/hosts/lists.php) and [@mmotti](https://github.com/mmotti)'s work.
-* Creates extra users for full-tunneling and split-tunneling
+* Creates extra users for full tunneling and dns-only split tunneling
 * Includes a new port to try to guard against VPN blocking
 
-For split tunnel, simply replace `0.0.0.0/0, ::0/0` with `172.16.0.1/32, fcaa::1/64` for the `AllowedIPs` in the Wireguard .conf file.
-
-Split tunnel caveats:
-
-* This appears to work, but I need your help to confirm.
-* I would like to automate the .conf file generation to track for a word in the user name and adjust the `AllowedIPs` accordingly (e.g., user phone-full would have `AllowedIPs` of `0.0.0.0/0` while `phone-pihole` would have `172.16.0.1/32`). If you know how to do that, please let me know.
-* I cannot figure out how to do this for IPSEC, so only working on Wireguard for now.
+Split tunneling caveats:
+* **Split tunneling only works with WireGuard** – if you can figure out how to make this work with StrongSwan, I would love to chat.
 
 ----------------
 
