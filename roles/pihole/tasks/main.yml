@@ -73,4 +73,7 @@
   timezone:
     name: America/New_York
 
+- pause: Pause for CPU bursts
+    seconds: 30
+
 - meta: flush_handlers
