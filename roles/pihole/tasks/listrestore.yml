@@ -1,0 +1,36 @@
+---
+- name: Pihole list restore | Configure whitelist
+  copy:
+    src: whitelist.txt
+    dest: /etc/pihole/whitelist.txt
+    owner: root
+    group: root
+    mode: 0644
+    force: yes
+
+- name: Pihole list restore | Configure blacklist
+  copy:
+    src: blacklist.txt
+    dest: /etc/pihole/blacklist.txt
+    owner: root
+    group: root
+    mode: 0644
+    force: yes
+
+- name: Pihole list restore | Configure regex list
+  copy:
+    src: regex.list
+    dest: /etc/pihole/regex.list
+    owner: pihole
+    group: www-data
+    mode: 0664
+    force: yes
+
+- name: Pihole list restore | Configure adlist
+  copy:
+    src: adlists.list
+    dest: /etc/pihole/adlists.list
+    owner: root
+    group: root
+    mode: 0644
+    force: yes

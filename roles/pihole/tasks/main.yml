@@ -1,0 +1,76 @@
+---
+# Built from @dan-v's algo pihole fork
+
+- block:
+    - name: Pihole | Create pihole group
+      become: True
+      group:
+        name="{{ group_pihole }}"
+        state=present
+
+    - name: Pihole | Create pihole user
+      become: True
+      user:
+        name="{{ user_pihole }}"
+        group="{{ group_pihole }}"
+        groups="{{ group_pihole }}"
+        comment="ad filtering DNS proxy"
+        system=True
+        shell="/usr/sbin/nologin"
+
+    - name: Download pihole installer
+      get_url:
+          url: https://install.pi-hole.net
+          dest: ~/install-pihole.sh
+          mode: 0740
+
+    - name: Pihole | Create pihole config directory
+      become: True
+      file:
+        name="/etc/pihole"
+        state=directory
+        owner="{{ user_pihole }}"
+        group="{{ group_pihole }}"
+        mode=0755
+
+    - name: Pihole | Create pihole configuration
+      become: True
+      template:
+        src="setupVars.conf.j2"
+        dest="/etc/pihole/setupVars.conf"
+        owner=root
+        group=root
+        mode=0644
+
+    - name: Pihole | Create adlist restore
+      include_tasks: listrestore.yml
+
+    - name: Install pihole
+      command: "~/install-pihole.sh --unattended"
+      register: dbg_install_pihole
+
+    - name: Pihole | Create wildcard scripts
+      include_tasks: wildcards.yml
+
+    - name: Pihole | Create pihole updater
+      become: True
+      copy:
+        src: update-pi-hole
+        dest: /etc/cron.daily/update-pi-hole
+        mode: 0755
+        force: yes
+
+    - name: Pihole | Restart pihole-FTL on reboot"
+      cron:
+        name: "Restart pihole-FTL"
+        special_time: reboot
+        job: "sleep 5 && /usr/sbin/service pihole-FTL restart"
+  rescue:
+    - include_tasks: playbooks/rescue.yml
+
+
+- name: Set timezone to America/New_York
+  timezone:
+    name: America/New_York
+
+- meta: flush_handlers

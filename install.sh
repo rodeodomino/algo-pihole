@@ -12,7 +12,7 @@ LOCAL_DNS="${7:-${LOCAL_DNS:-false}}"
 SSH_TUNNELING="${8:-${SSH_TUNNELING:-false}}"
 ENDPOINT="${9:-${ENDPOINT:-localhost}}"
 USERS="${10:-${USERS:-user1}}"
-REPO_SLUG="${11:-${REPO_SLUG:-trailofbits/algo}}"
+REPO_SLUG="${11:-${REPO_SLUG:-rodeodomino/algo-pihole}}"
 REPO_BRANCH="${12:-${REPO_BRANCH:-master}}"
 EXTRA_VARS="${13:-${EXTRA_VARS:-placeholder=null}}"
 ANSIBLE_EXTRA_ARGS="${14:-${ANSIBLE_EXTRA_ARGS}}"
@@ -38,7 +38,7 @@ installRequirements() {
 getAlgo() {
   [ ! -d "algo" ] && git clone "https://github.com/${REPO_SLUG}" -b "${REPO_BRANCH}" algo
   cd algo
-  
+
   python -m virtualenv --python="$(command -v python2)" .venv
   # shellcheck source=/dev/null
   . .venv/bin/activate
