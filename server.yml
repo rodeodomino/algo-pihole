@@ -17,7 +17,7 @@
         tags: dns_encryption
 
       - import_role:
-          name: dns_adblocking
+          name: pihole
         when: algo_local_dns
         tags: dns_adblocking
 

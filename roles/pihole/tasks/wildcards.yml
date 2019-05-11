@@ -1,0 +1,42 @@
+---
+- block:
+  - name: Download dnsmasq wildcards
+    get_url:
+      url: https://raw.githubusercontent.com/mmotti/pihole-filter-lists/master/fetchFilterLists.sh
+      dest: /usr/local/bin/fetchFilterLists.sh
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Download gravity optimizer
+    get_url:
+      url: https://raw.githubusercontent.com/mmotti/pihole-gravity-optimise/master/gravityOptimise.sh
+      dest: /usr/local/bin/gravityOptimise.sh
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Dnsmasq list added to cron
+    cron:
+      name: Download filters and restart pihole service
+      minute: "40"
+      hour: "3"
+      job: /usr/local/bin/fetchFilterLists.sh
+      user: root
+
+  - name: Gravity optimizer added to cron
+    cron:
+      name: Optimize gravity
+      minute: "42"
+      hour: "6"
+      weekday: "0"
+      job: /usr/local/bin/gravityOptimise.sh
+      user: root
+
+  - name: Run fetchFilterLists
+    command: "/usr/local/bin/fetchFilterLists.sh"
+    register: dbg_fetch_filters
+
+  - name: Run gravityOptimise
+    command: "/usr/local/bin/gravityOptimise.sh"
+    register: dbg_gravity_optimise
