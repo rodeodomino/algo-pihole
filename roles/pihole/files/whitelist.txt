@@ -3,3 +3,4 @@ ocsp.apple.com
 traffic.libsyn.com
 traffic.megaphone.fm
 urldefense.proofpoint.com
+codeload.github.com

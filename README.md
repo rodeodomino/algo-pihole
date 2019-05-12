@@ -10,7 +10,6 @@ In addition to installing Pi-hole, it:
 * Checks for Pi-hole updates
 * Includes a prebuilt whitelist, blacklist, regex, and adlist (available for you to edit) based off of [@WaLLy3K](https://v.firebog.net/hosts/lists.php) and [@mmotti](https://github.com/mmotti)'s work.
 * Creates extra users for full tunneling and dns-only split tunneling
-* Includes a new port to try to guard against VPN blocking
 
 Split tunneling caveats:
 * **Split tunneling only works with WireGuard** – if you can figure out how to make this work with StrongSwan, I would love to chat.
@@ -220,6 +219,7 @@ After this process completes, the Algo VPN server will contain only the users li
   - Configure [Azure](docs/cloud-azure.md)
   - Configure [DigitalOcean](docs/cloud-do.md)
   - Configure [Google Cloud Platform](docs/cloud-gce.md)
+  - Configure [Scaleway](docs/cloud-scaleway.md)
   - Configure [Vultr](docs/cloud-vultr.md)
 * Advanced Deployment
   - Deploy to your own [FreeBSD](docs/deploy-to-freebsd.md) server
