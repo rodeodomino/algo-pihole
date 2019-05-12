@@ -17,7 +17,7 @@ pihole_ipv4: >-
   {% endif %}
 pihole_ipv6: >-
   {% if wireguard_enabled and not ipsec_enabled -%}
-  {% if ipv6_support %}{{ _wireguard_network_ipv6['gateway'] }}/{{ _wireguard_network_ipv6['prefix'] }}{% else %}{% endif %}
+  {% if ipv6_support %}{{ _wireguard_network_ipv6['gateway'] }}{% else %}{% endif %}
   {% else -%}
   FCAA::1
   {% endif %}
