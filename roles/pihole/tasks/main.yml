@@ -42,16 +42,6 @@
         group=root
         mode=0644
 
-    - set_fact:
-        pihole_hosts: "{{ lookup('template', 'hosts.j2') }}"
-
-    - name: Pihole | Add users to Pi-hole hosts
-      blockinfile:
-        dest: /etc/hosts
-        content: '{{ pihole_hosts }}'
-        state: present
-        backup: yes
-
     - name: Pihole | Create adlist restore
       include_tasks: listrestore.yml
 
@@ -63,14 +53,12 @@
       include_tasks: wildcards.yml
 
     - name: Pihole | Create pihole updater
-      become: True
-      copy:
-        src: update-pi-hole
-        dest: /etc/cron.daily/update-pi-hole
-        mode: 0755
-        force: yes
+      cron:
+        name: "Update pihole"
+        special_time: daily
+        job: "pihole -up"
 
-    - name: Pihole | Restart pihole-FTL on reboot"
+    - name: Pihole | Restart pihole-FTL on reboot
       cron:
         name: "Restart pihole-FTL"
         special_time: reboot
@@ -78,6 +66,22 @@
   rescue:
     - include_tasks: playbooks/rescue.yml
 
+- name: Add LAN DNS hosts dnsmasq file
+  copy:
+    dest: /etc/dnsmasq.d/02-lan.conf
+    content: "addn-hosts=/etc/pihole/lan.list"
+
+- name: Add Pi-hole hosts
+  template:
+    src: lan.list.j2
+    dest: /etc/pihole/lan.list
+    owner: root
+    group: root
+    mode: 0644
+    force: yes
+  notify:
+   - restart pihole-FTL
+  tags: update-users
 
 - name: Set timezone to America/New_York
   timezone:

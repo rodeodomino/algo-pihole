@@ -11,4 +11,5 @@
 # {{ u }}
 {{ wireguard_network_ipv4 | ipaddr(index|int+1) | ipv4('address') }} {{ u }}
 {{ wireguard_network_ipv6 | ipaddr(index|int+1) | ipv6('address') + ' ' + u +"-ipv6" if ipv6_support else '' }}
+
 {% endfor %}
