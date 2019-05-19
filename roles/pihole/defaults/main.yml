@@ -11,15 +11,15 @@ pihole_interface: >-
   {% endif %}
 pihole_ipv4: >-
   {% if wireguard_enabled and not ipsec_enabled -%}
-  {{ _wireguard_network_ipv4['gateway'] }}/{{ _wireguard_network_ipv4['prefix'] }}
+  {{ wireguard_network_ipv4 | ipaddr(1) }}
   {% else -%}
   {{ local_service_ip }}/32
   {% endif %}
 pihole_ipv6: >-
   {% if wireguard_enabled and not ipsec_enabled -%}
-  {% if ipv6_support %}{{ _wireguard_network_ipv6['gateway'] }}{% else %}{% endif %}
+  {{ wireguard_network_ipv6 | ipaddr(1) | ipv6('address') }}
   {% else -%}
-  FCAA::1
+  {{ local_service_ipv6 }}
   {% endif %}
 pihole_ipv4_dns: "{% if dns_encryption|default(false)|bool -%}{{ local_service_ip }}#5353{% else %}1.1.1.1{% endif %}"
-pihole_ipv6_dns: "{% if dns_encryption|default(false)|bool -%}FCAA::1#5353{% else %}2606:4700:4700::1111{% endif %}"
+pihole_ipv6_dns: "{% if dns_encryption|default(false)|bool -%}{{ local_service_ipv6 }}#5353{% else %}2606:4700:4700::1111{% endif %}"
