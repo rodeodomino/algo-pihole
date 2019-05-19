@@ -86,18 +86,19 @@ COMMIT
 {% if wireguard_enabled and not ipsec_enabled %}
 -A INPUT -i wg0 -p udp --dport 53 -j ACCEPT
 {% else %}
--A INPUT -d fcaa::1 -p udp --dport 53 -j ACCEPT
+-A INPUT -d {{ local_service_ipv6 }}/128 -p udp --dport 53 -j ACCEPT
 {% endif %}
 
 # Pi-hole
 {% if wireguard_enabled and not ipsec_enabled %}
 -A INPUT -i wg0 -p tcp --dport 80 -j ACCEPT
 {% else %}
--A INPUT -d fcaa::1 -p tcp --dport 80 -j ACCEPT
+-A INPUT -d {{ local_service_ipv6 }}/128 -p tcp --dport 80 -j ACCEPT
 {% endif %}
 -A INPUT -p udp --dport 80 -j REJECT --reject-with icmp6-port-unreachable
 -A INPUT -p tcp --dport 443 -j REJECT --reject-with tcp-reset
 -A INPUT -p udp --dport 443 -j REJECT --reject-with icmp6-port-unreachable
+
 
 # Drop traffic between VPN clients
 -A FORWARD -s {{ subnets|join(',') }} -d {{ subnets|join(',') }} -j {{ "DROP" if BetweenClients_DROP else "ACCEPT" }}
