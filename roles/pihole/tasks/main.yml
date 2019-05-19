@@ -73,6 +73,16 @@
   timezone:
     name: America/New_York
 
+- set_fact:
+    pihole_hosts: "{{ lookup('template', 'hosts.j2') }}"
+
+- name: Add users to Pi-hole hosts
+  blockinfile:
+    dest: /etc/hosts
+    content: '{{ pihole_hosts }}'
+    state: present
+    backup: yes
+
 - name: Pause to account for CPU bursting
   pause:
     prompt: "Pause to bring down CPU bursting"
