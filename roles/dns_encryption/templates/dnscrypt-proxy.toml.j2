@@ -39,6 +39,7 @@
 
 listen_addresses  = ['{{ local_service_ip }}:{{ listen_port }}'{% if ipv6_support %}, '[{{ local_service_ipv6 }}]:{{ listen_port }}'{% endif %}]
 
+
 ## Maximum number of simultaneous client connections to accept
 
 max_clients = 250

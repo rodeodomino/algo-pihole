@@ -3,23 +3,8 @@ user_pihole: "pihole"
 group_pihole: "pihole"
 pihole_path: "/opt/pihole"
 pihole_config_path: "/etc/pihole"
-pihole_interface: >-
-  {% if wireguard_enabled and not ipsec_enabled -%}
-  wg0
-  {% else -%}
-  lo
-  {% endif %}
-pihole_ipv4: >-
-  {% if wireguard_enabled and not ipsec_enabled -%}
-  {{ wireguard_network_ipv4 | ipaddr(1) }}
-  {% else -%}
-  {{ local_service_ip }}/32
-  {% endif %}
-pihole_ipv6: >-
-  {% if wireguard_enabled and not ipsec_enabled -%}
-  {{ wireguard_network_ipv6 | ipaddr(1) | ipv6('address') }}
-  {% else -%}
-  {{ local_service_ipv6 }}
-  {% endif %}
+pihole_interface: "lo"
+pihole_ipv4: "{{ local_service_ip }}/32"
+pihole_ipv6: "{{ local_service_ipv6 }}"
 pihole_ipv4_dns: "{% if dns_encryption|default(false)|bool -%}{{ local_service_ip }}#5353{% else %}1.1.1.1{% endif %}"
 pihole_ipv6_dns: "{% if dns_encryption|default(false)|bool -%}{{ local_service_ipv6 }}#5353{% else %}2606:4700:4700::1111{% endif %}"

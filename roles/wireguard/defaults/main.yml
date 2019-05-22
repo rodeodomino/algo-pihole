@@ -6,11 +6,7 @@ wireguard_interface: wg0
 keys_clean_all: false
 wireguard_dns_servers: >-
   {% if local_dns|default(false)|bool or dns_encryption|default(false)|bool %}
-  {% if wireguard_enabled and not ipsec_enabled -%}
-  {{ wireguard_network_ipv4 | ipaddr(1) | ipv4('address') }}{{ ', ' + wireguard_network_ipv6 | ipaddr(1) | ipv6('address') if ipv6_support else '' }}
-  {% else %}
   {{ local_service_ip }}{{ ', ' + local_service_ipv6 if ipv6_support else '' }}
-  {% endif %}
   {% else %}
   {% for host in dns_servers.ipv4 %}{{ host }}{% if not loop.last %},{% endif %}{% endfor %}{% if ipv6_support %},{% for host in dns_servers.ipv6 %}{{ host }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}
   {% endif %}
@@ -20,9 +16,4 @@ wireguard_client_ip: >-
 wireguard_server_ip: >-
   {{ wireguard_network_ipv4 | ipaddr('1') }}
   {{ ',' + wireguard_network_ipv6 | ipaddr('1') if ipv6_support else '' }}
-pihole_allowed_ips: >-
-  {% if ipsec_enabled -%}
-  {{ local_service_ip }}/32, {{ local_service_ipv6 }}/128, {{ wireguard_network_ipv4 | ipaddr(1) }}{{ ', ' + wireguard_network_ipv6 | ipaddr(1) if ipv6_support else '' }}
-  {% else -%}
-  {{ wireguard_network_ipv4 | ipaddr(1) }}{{ ', ' + wireguard_network_ipv6 | ipaddr(1) if ipv6_support else '' }}
-  {% endif %}
+pihole_allowed_ips: "{{ local_service_ip }}/32, {{ local_service_ipv6 }}/128, {{ wireguard_network_ipv4 | ipaddr(1) }}{{ ', ' + wireguard_network_ipv6 | ipaddr(1) if ipv6_support else '' }}"
