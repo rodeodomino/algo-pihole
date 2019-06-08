@@ -11,6 +11,8 @@ In addition to installing Pi-hole, it:
 * Includes a prebuilt whitelist, blacklist, regex, and adlist (available for you to edit) based off of [@WaLLy3K](https://v.firebog.net/hosts/lists.php) and [@mmotti](https://github.com/mmotti)'s work.
 * Creates extra users for full tunneling and dns-only split tunneling
 
+***Important note***: Algo now supports (and defaults to) Ubuntu 19.04, but Pi-hole doesn't. This script still uses Ubuntu 18.04 LTS, with the option of changing it to 19.04 in `config.cfg`. If you change it, the Pi-hole web interface **will crash**. I will change the installation back to 19.04 once Pi-hole issues an update.
+
 Split tunneling caveats:
 * **Split tunneling only works with WireGuard** – if you can figure out how to make this work with StrongSwan, I would love to chat.
 
@@ -29,7 +31,7 @@ Algo VPN is a set of Ansible scripts that simplify the setup of a personal IPSEC
 * Blocks ads with a local DNS resolver (optional)
 * Sets up limited SSH users for tunneling traffic (optional)
 * Based on current versions of Ubuntu and strongSwan
-* Installs to DigitalOcean, Amazon Lightsail, Amazon EC2, Vultr, Microsoft Azure, Google Compute Engine, Scaleway, OpenStack, or your own Ubuntu 18.04 LTS server
+* Installs to DigitalOcean, Amazon Lightsail, Amazon EC2, Vultr, Microsoft Azure, Google Compute Engine, Scaleway, OpenStack, or your own Ubuntu server
 
 ## Anti-features
 
@@ -66,7 +68,7 @@ The easiest way to get an Algo server running is to let it set up a _new_ virtua
           python-setuptools \
           python-virtualenv -y
       ```
-     - Linux (rpm-based): See the [Pre-Install Documentation for RedHat/CentOS 6.x](docs/deploy-from-redhat-centos6.md)
+     - Linux (rpm-based): See the pre-installation documentation for [RedHat/CentOS 6.x](docs/deploy-from-redhat-centos6.md) or [Fedora](docs/deploy-from-fedora-workstation.md)
      - Windows: See the [Windows documentation](docs/deploy-from-windows.md)
 
 4. **Install Algo's remaining dependencies.** Use the same Terminal window as the previous step and run:
@@ -78,11 +80,11 @@ The easiest way to get an Algo server running is to let it set up a _new_ virtua
     ```
     On macOS, you may be prompted to install `cc`. You should press accept if so.
 
-5. **List the users to create.** Open `config.cfg` in your favorite text editor. Specify the users you wish to create in the `users` list.
+5. **List the users to create.** Open `config.cfg` in your favorite text editor. Specify the users you wish to create in the `users` list. If you want to be able to add or delete users later, you **must** select `yes` for the `Do you want to retain the CA key?` prompt during the deployment.
 
 6. **Start the deployment.** Return to your terminal. In the Algo directory, run `./algo` and follow the instructions. There are several optional features available. None are required for a fully functional VPN server. These optional features are described in greater detail in [deploy-from-ansible.md](docs/deploy-from-ansible.md).
 
-That's it! You will get the message below when the server deployment process completes. You now have an Algo server on the internet. Take note of the p12 (user certificate) password in case you need it later, **it will only be displayed this time**.
+That's it! You will get the message below when the server deployment process completes. You now have an Algo server on the internet. Take note of the p12 (user certificate) password and the CA key in case you need them later, **they will only be displayed this time**.
 
 You can now setup clients to connect it, e.g. your iPhone or laptop. Proceed to [Configure the VPN Clients](#configure-the-vpn-clients) below.
 
@@ -137,7 +139,7 @@ Network Manager does not support AES-GCM. In order to support Linux Desktop clie
 
 Install strongSwan, then copy the included ipsec_user.conf, ipsec_user.secrets, user.crt (user certificate), and user.key (private key) files to your client device. These will require customization based on your exact use case. These files were originally generated with a point-to-point OpenWRT-based VPN in mind.
 
-#### Ubuntu Server 18.04 example
+#### Ubuntu Server example
 
 1. `sudo apt-get install strongswan libstrongswan-standard-plugins`: install strongSwan
 2. `/etc/ipsec.d/certs`: copy `<name>.crt` from `algo-master/configs/<server_ip>/ipsec/manual/<name>.crt`
@@ -191,7 +193,7 @@ where `user` is either `root` or `ubuntu` as listed on the success message, and 
 
 ## Adding or Removing Users
 
-If you chose to save the CA certificate during the deploy process, then Algo's own scripts can easily add and remove users from the VPN server.
+_If you chose to save the CA key during the deploy process,_ then Algo's own scripts can easily add and remove users from the VPN server.
 
 1. Update the `users` list in your `config.cfg`
 2. Open a terminal, `cd` to the algo directory, and activate the virtual environment with `source env/bin/activate`
