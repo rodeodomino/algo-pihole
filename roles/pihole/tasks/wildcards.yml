@@ -32,11 +32,3 @@
       weekday: "0"
       job: /usr/local/bin/gravityOptimise.sh
       user: root
-
-  - name: Run fetchFilterLists
-    command: "/usr/local/bin/fetchFilterLists.sh"
-    register: dbg_fetch_filters
-
-  - name: Run gravityOptimise
-    command: "/usr/local/bin/gravityOptimise.sh"
-    register: dbg_gravity_optimise

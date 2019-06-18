@@ -18,12 +18,6 @@
         system=True
         shell="/usr/sbin/nologin"
 
-    - name: Download pihole installer
-      get_url:
-          url: https://install.pi-hole.net
-          dest: ~/install-pihole.sh
-          mode: 0740
-
     - name: Pihole | Create pihole config directory
       become: True
       file:
@@ -44,10 +38,6 @@
 
     - name: Pihole | Create adlist restore
       include_tasks: listrestore.yml
-
-    - name: Install pihole
-      command: "~/install-pihole.sh --unattended"
-      register: dbg_install_pihole
 
     - name: Pihole | Create wildcard scripts
       include_tasks: wildcards.yml
@@ -79,8 +69,6 @@
     group: root
     mode: 0644
     force: yes
-  notify:
-   - restart pihole-FTL
   tags: update-users
 
 - name: Set timezone to America/New_York
