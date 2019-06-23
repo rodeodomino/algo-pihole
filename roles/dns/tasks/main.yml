@@ -21,10 +21,10 @@
   notify:
     - restart dnscrypt-proxy
 
+- meta: flush_handlers
+
 - name: dnscrypt-proxy enabled and started
   service:
     name: dnscrypt-proxy
     state: started
     enabled: true
-
-- meta: flush_handlers

@@ -98,7 +98,7 @@
 
       - import_role:
           name: pihole
-        when: algo_local_dns
+        when: algo_dns_adblocking
 
       - import_role:
           name: wireguard

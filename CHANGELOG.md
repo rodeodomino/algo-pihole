@@ -19,6 +19,7 @@
 - Installation error after \#1397 [\#1409](https://github.com/trailofbits/algo/issues/1409)
 
 ### Changed
+- Azure: moved to the Standard_B1S image size
 - Refactoring, Linting and additional tests [\#1397](https://github.com/trailofbits/algo/pull/1397) ([jackivanov](https://github.com/jackivanov))
 - Scaleway modules [\#1410](https://github.com/trailofbits/algo/pull/1410) ([jackivanov](https://github.com/jackivanov))
 - Use VULTR_API_CONFIG variable if set [\#1374](https://github.com/trailofbits/algo/pull/1374) ([davidemyers](https://github.com/davidemyers))
@@ -27,7 +28,7 @@
 
 ## 1.0 [(Mar 19, 2019)](https://github.com/trailofbits/algo/tree/v1.0)
 
-### Added 
+### Added
 - Tagged releases and changelog [\#724](https://github.com/trailofbits/algo/issues/724)
 - Add support for custom domain names [\#759](https://github.com/trailofbits/algo/issues/759)
 

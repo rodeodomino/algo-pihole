@@ -7,7 +7,7 @@
       server_name: algo-pihole
       ondemand_cellular: false
       ondemand_wifi: false
-      local_dns: false
+      dns_adblocking: true
       ssh_tunneling: false
       windows: false
       store_cakey: false
@@ -125,7 +125,7 @@
             {%- elif _ondemand_wifi_exclude.user_input is defined and _ondemand_wifi_exclude.user_input|length > 0 -%}
             {{ _ondemand_wifi_exclude.user_input | b64encode }}
             {%- else %}{{ '_null' | b64encode }}{% endif %}
-          algo_local_dns: true
+          algo_dns_adblocking: true
           algo_ssh_tunneling: >-
             {% if ssh_tunneling is defined %}{{ ssh_tunneling | bool }}
             {%- elif _ssh_tunneling.user_input is defined %}{{ booleans_map[_ssh_tunneling.user_input] | default(defaults['ssh_tunneling']) }}
