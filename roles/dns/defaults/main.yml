@@ -1,5 +1,4 @@
 ---
-algo_dns_adblocking: false
 apparmor_enabled: true
 dns_encryption: true
 ipv6_support: false

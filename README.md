@@ -6,10 +6,10 @@ This is a fork of [@trailofbits](https://github.com/trailofbits) amazing work wi
 
 In addition to installing Pi-hole, it:
 
-* Automatically sets up [@mmotti](https://github.com/mmotti)'s [Fetch Filter Lists](https://github.com/mmotti/pihole-filter-lists) and [Gravity Optimise](https://github.com/mmotti/pihole-gravity-optimise) scripts
-* Checks for Pi-hole updates
+* Automatically sets up [@mmotti](https://github.com/mmotti)'s [Fetch Filter Lists](https://github.com/mmotti/pihole-filter-lists) and [Gravity Optimise](https://github.com/mmotti/pihole-gravity-optimise) scripts for systems with at least 1GB of memory.
+* Checks for Pi-hole updates.
 * Includes a prebuilt whitelist, blacklist, regex, and adlist (available for you to edit) based off of [@WaLLy3K](https://v.firebog.net/hosts/lists.php) and [@mmotti](https://github.com/mmotti)'s work.
-* Creates extra users for full tunneling and dns-only split tunneling
+* Creates extra users for full tunneling and dns-only split tunneling.
 
 ***Important note***: Algo now supports (and defaults to) Ubuntu 19.04, but Pi-hole doesn't. This script still uses Ubuntu 18.04 LTS, with the option of changing it to 19.04 in `config.cfg`. If you change it, the Pi-hole web interface **will crash**. I will change the installation back to 19.04 once Pi-hole issues an update.
 
