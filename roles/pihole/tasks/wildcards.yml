@@ -1,42 +1,41 @@
 ---
-- block:
-  - name: Download dnsmasq wildcards
-    get_url:
-      url: https://raw.githubusercontent.com/mmotti/pihole-filter-lists/master/fetchFilterLists.sh
-      dest: /usr/local/bin/fetchFilterLists.sh
-      owner: root
-      group: root
-      mode: 0755
+- name: Pi-hole wildcard tools | Download wildcard generator
+  get_url:
+    url: https://raw.githubusercontent.com/mmotti/pihole-gravity-wildcards/master/generateGravityWildcards.sh
+    dest: /usr/local/bin/generateGravityWildcards.sh
+    owner: root
+    group: root
+    mode: 0755
 
-  - name: Download gravity optimizer
-    get_url:
-      url: https://raw.githubusercontent.com/mmotti/pihole-gravity-optimise/master/gravityOptimise.sh
-      dest: /usr/local/bin/gravityOptimise.sh
-      owner: root
-      group: root
-      mode: 0755
+- name: Pi-hole wildcard tools | Download dnsmasq wildcards
+  get_url:
+    url: https://raw.githubusercontent.com/mmotti/pihole-filter-lists/master/fetchFilterLists.sh
+    dest: /usr/local/bin/fetchFilterLists.sh
+    owner: root
+    group: root
+    mode: 0755
 
-  - name: Dnsmasq list added to cron
-    cron:
-      name: Download filters and restart pihole service
-      minute: "40"
-      hour: "3"
-      job: /usr/local/bin/fetchFilterLists.sh
-      user: root
+- name: Pi-hole wildcard tools | Download gravity optimizer
+  get_url:
+    url: https://raw.githubusercontent.com/mmotti/pihole-gravity-optimise/master/gravityOptimise.sh
+    dest: /usr/local/bin/gravityOptimise.sh
+    owner: root
+    group: root
+    mode: 0755
 
-  - name: Gravity optimizer added to cron
-    cron:
-      name: Optimize gravity
-      minute: "42"
-      hour: "6"
-      weekday: "0"
-      job: /usr/local/bin/gravityOptimise.sh
-      user: root
+- name: Pi-hole wildcard tools | Add scripts to cron
+  template:
+    src: wildcards.j2
+    dest: /etc/cron.d/wildcards
 
-  - name: Run fetchFilterLists
-    command: "/usr/local/bin/fetchFilterLists.sh"
-    register: dbg_fetch_filters
+- name: Pi-hole wildcard tools | Run generateGravityWildcards
+  command: /usr/local/bin/generateGravityWildcards.sh
+  changed_when: false
 
-  - name: Run gravityOptimise
-    command: "/usr/local/bin/gravityOptimise.sh"
-    register: dbg_gravity_optimise
+- name: Pi-hole wildcard tools | Run fetchFilterLists
+  command: /usr/local/bin/fetchFilterLists.sh
+  changed_when: false
+
+- name: Pi-hole wildcard tools | Run gravityOptimise
+  command: /usr/local/bin/gravityOptimise.sh
+  changed_when: false

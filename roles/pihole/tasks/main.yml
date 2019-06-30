@@ -51,7 +51,6 @@
 
     - name: Create wildcard scripts
       include_tasks: wildcards.yml
-      when: ansible_memtotal_mb > 1000
 
     - name: Create pihole updater
       cron:
@@ -83,10 +82,6 @@
   notify:
    - restart pihole-FTL
   tags: update-users
-
-- name: Set timezone to America/New_York
-  timezone:
-    name: America/New_York
 
 - name: Pause to account for CPU bursting
   pause:
