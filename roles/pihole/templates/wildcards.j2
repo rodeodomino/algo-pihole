@@ -1,0 +1,11 @@
+{% set apt_hour = range(2, 9) | random %}
+{% set apt_minute = range (0, 45) | random %}
+
+# Check for excessive subdomains
+{{ apt_minute }} {{ apt_hour }} * * * root PATH="$PATH:/usr/local/bin/" generateGravityWildcards.sh
+
+# Download filters and restart pihole service
+{{ apt_minute + 5 }} {{ apt_hour }} * * * root PATH="$PATH:/usr/local/bin/" fetchFilterLists.sh
+
+# Optimize gravity
+{{ apt_minute + 10 }} {{ apt_hour }} * * * root PATH="$PATH:/usr/local/bin/" gravityOptimise.sh

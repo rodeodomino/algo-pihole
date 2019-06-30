@@ -1,8 +1,3 @@
-api.facebook.com
-connect.facebook.com
-badge.facebook.com
-api-read.facebook.com
 api.radar.io
 beanstalk.37signals.com
 graph.facebook.com
-b.measuread.com

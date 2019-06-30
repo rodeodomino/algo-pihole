@@ -1,5 +1,4 @@
 (^|\.)engine\.mobileapptracking\.com$
-(^|\.)facebook\.net$
 (^|\.)comscoreresearch\.com$
 (^|\.)glassbox.+
 ^(.+[-_.])??adse?rv(er?|ice)?s?[0-9]*[-.]
@@ -14,10 +13,11 @@
 ^beacons?[0-9]*[-.]
 ^count(ers?)?[0-9]*[-.]
 ^pixels?[-.]
-^stat(s|istics)?[0-9]*[-.]
 ^telemetry[-.]
 ^track(ers?|ing)?[0-9]*[-.]
-^traff(ic)?[-.]
 (^|\.)iadsdk\.apple\.com$
 (^|\.)omtrdc\.net$
 (^|\.)branch\.io$
+(^|\.)measuread\.com$
+(^|\.)demdex\.net$
+(^|\.)hockeyapp\.net$
