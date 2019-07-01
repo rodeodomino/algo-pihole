@@ -11,8 +11,6 @@ In addition to installing Pi-hole, it:
 * Includes a prebuilt whitelist, blacklist, regex, and adlist (available for you to edit) based off of [@WaLLy3K](https://v.firebog.net/hosts/lists.php) and [@mmotti](https://github.com/mmotti)'s work.
 * Creates extra users for full tunneling and dns-only split tunneling.
 
-***Important note***: Algo now supports (and defaults to) Ubuntu 19.04, but Pi-hole doesn't. This script still uses Ubuntu 18.04 LTS, with the option of changing it to 19.04 in `config.cfg`. If you change it, the Pi-hole web interface **will crash**. I will change the installation back to 19.04 once Pi-hole issues an update.
-
 Split tunneling caveats:
 * **Split tunneling only works with WireGuard** – if you can figure out how to make this work with StrongSwan, I would love to chat.
 
