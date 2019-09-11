@@ -1,6 +1,10 @@
 ---
 # Built from @dan-v's algo pihole fork
 
+# Temporary fix to resolve PHP installation
+- name: Create adlist restore
+  include_tasks: 1904workaround.yml
+
 - block:
     - name: Create pihole group
       become: True
