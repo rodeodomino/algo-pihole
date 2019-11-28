@@ -6,16 +6,15 @@ METHOD="${1:-${METHOD:-cloud}}"
 ONDEMAND_CELLULAR="${2:-${ONDEMAND_CELLULAR:-false}}"
 ONDEMAND_WIFI="${3:-${ONDEMAND_WIFI:-false}}"
 ONDEMAND_WIFI_EXCLUDE="${4:-${ONDEMAND_WIFI_EXCLUDE:-_null}}"
-WINDOWS="${5:-${WINDOWS:-false}}"
-STORE_CAKEY="${6:-${STORE_CAKEY:-false}}"
-DNS_ADBLOCKING="${7:-${DNS_ADBLOCKING:-true}}"
-SSH_TUNNELING="${8:-${SSH_TUNNELING:-false}}"
-ENDPOINT="${9:-${ENDPOINT:-localhost}}"
-USERS="${10:-${USERS:-user1}}"
-REPO_SLUG="${11:-${REPO_SLUG:-rodeodomino/algo-pihole}}"
-REPO_BRANCH="${12:-${REPO_BRANCH:-master}}"
-EXTRA_VARS="${13:-${EXTRA_VARS:-placeholder=null}}"
-ANSIBLE_EXTRA_ARGS="${14:-${ANSIBLE_EXTRA_ARGS}}"
+STORE_PKI="${5:-${STORE_PKI:-false}}"
+DNS_ADBLOCKING="${6:-${DNS_ADBLOCKING:-true}}"
+SSH_TUNNELING="${7:-${SSH_TUNNELING:-false}}"
+ENDPOINT="${8:-${ENDPOINT:-localhost}}"
+USERS="${9:-${USERS:-user1}}"
+REPO_SLUG="${10:-${REPO_SLUG:-rodeodomino/algo-pihole}}"
+REPO_BRANCH="${11:-${REPO_BRANCH:-master}}"
+EXTRA_VARS="${12:-${EXTRA_VARS:-placeholder=null}}"
+ANSIBLE_EXTRA_ARGS="${13:-${ANSIBLE_EXTRA_ARGS}}"
 
 cd /opt/
 
@@ -28,10 +27,10 @@ installRequirements() {
     build-essential \
     libssl-dev \
     libffi-dev \
-    python-dev \
-    python-pip \
-    python-setuptools \
-    python-virtualenv \
+    python3-dev \
+    python3-pip \
+    python3-setuptools \
+    python3-virtualenv \
     bind9-host \
     jq -y
 }
@@ -40,11 +39,11 @@ getAlgo() {
   [ ! -d "algo" ] && git clone "https://github.com/${REPO_SLUG}" -b "${REPO_BRANCH}" algo
   cd algo
 
-  python -m virtualenv --python="$(command -v python2)" .venv
+  python3 -m virtualenv --python="$(command -v python3)" .venv
   # shellcheck source=/dev/null
   . .venv/bin/activate
-  python -m pip install -U pip virtualenv
-  python -m pip install -r requirements.txt
+  python3 -m pip install -U pip virtualenv
+  python3 -m pip install -r requirements.txt
 }
 
 publicIpFromInterface() {
@@ -91,8 +90,7 @@ deployAlgo() {
     -e "ondemand_cellular=${ONDEMAND_CELLULAR}" \
     -e "ondemand_wifi=${ONDEMAND_WIFI}" \
     -e "ondemand_wifi_exclude=${ONDEMAND_WIFI_EXCLUDE}" \
-    -e "windows=${WINDOWS}" \
-    -e "store_cakey=${STORE_CAKEY}" \
+    -e "store_pki=${STORE_PKI}" \
     -e "dns_adblocking=${DNS_ADBLOCKING}" \
     -e "ssh_tunneling=${SSH_TUNNELING}" \
     -e "endpoint=$ENDPOINT" \

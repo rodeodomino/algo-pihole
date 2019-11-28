@@ -9,6 +9,7 @@ First of all, check [this](https://github.com/trailofbits/algo#features) and ens
      * [Error: "TypeError: must be str, not bytes"](#error-typeerror-must-be-str-not-bytes)
      * [Error: "ansible-playbook: command not found"](#error-ansible-playbook-command-not-found)
      * [Error: "Could not fetch URL ... TLSV1_ALERT_PROTOCOL_VERSION](#could-not-fetch-url--tlsv1_alert_protocol_version)
+     * [Fatal: "Failed to validate the SSL certificate for ..."](#fatal-failed-to-validate-the-SSL-certificate)
      * [Bad owner or permissions on .ssh](#bad-owner-or-permissions-on-ssh)
      * [The region you want is not available](#the-region-you-want-is-not-available)
      * [AWS: SSH permission denied with an ECDSA key](#aws-ssh-permission-denied-with-an-ecdsa-key)
@@ -29,14 +30,16 @@ First of all, check [this](https://github.com/trailofbits/algo#features) and ens
      * [Various websites appear to be offline through the VPN](#various-websites-appear-to-be-offline-through-the-vpn)
      * [Clients appear stuck in a reconnection loop](#clients-appear-stuck-in-a-reconnection-loop)
      * [Wireguard: clients can connect on Wifi but not LTE](#wireguard-clients-can-connect-on-wifi-but-not-lte)
-     * ["Error 809" or IKE_AUTH requests that never make it to the server](#error-809-or-ike_auth-requests-that-never-make-it-to-the-server)
-     * [Windows: Parameter is incorrect](#windows-parameter-is-incorrect)
      * [IPsec: Difficulty connecting through router](#ipsec-difficulty-connecting-through-router)
   * [I have a problem not covered here](#i-have-a-problem-not-covered-here)
 
 ## Installation Problems
 
 Look here if you have a problem running the installer to set up a new Algo server.
+
+### Python version is not supported
+
+The minimum Python version required to run Algo is 3.6. Most modern operation systems should have it by default, but if the OS you are using doesn't meet the requirements, you have to upgrade. See the official documentation for your OS, or manual download it from https://www.python.org/downloads/. Otherwise, you may [deploy from docker](deploy-from-docker.md)
 
 ### Error: "You have not agreed to the Xcode license agreements"
 
@@ -107,25 +110,22 @@ Command /usr/bin/python -c "import setuptools, tokenize;__file__='/private/tmp/p
 Storing debug log for failure in /Users/algore/Library/Logs/pip.log
 ```
 
-You are running an old version of `pip` that cannot download the binary `cryptography` dependency. Upgrade to a new version of `pip` by running `sudo pip install -U pip`.
-
-### Error: "TypeError: must be str, not bytes"
-
-You tried to install Algo and you see many repeated errors referencing `TypeError`, such as `TypeError: '>=' not supported between instances of 'TypeError' and 'int'` and `TypeError: must be str, not bytes`. For example:
-
-```
-TASK [Wait until SSH becomes ready...] *****************************************
-An exception occurred during task execution. To see the full traceback, use -vvv. The error was: TypeError: must be str, not bytes
-fatal: [localhost -> localhost]: FAILED! => {"changed": false, "failed": true, "module_stderr": "Traceback (most recent call last):\n  File \"/var/folders/x_/nvr61v455qq98vp22k5r5vm40000gn/T/ansible_6sdjysth/ansible_module_wait_for.py\", line 538, in <module>\n    main()\n  File \"/var/folders/x_/nvr61v455qq98vp22k5r5vm40000gn/T/ansible_6sdjysth/ansible_module_wait_for.py\", line 483, in main\n    data += response\nTypeError: must be str, not bytes\n", "module_stdout": "", "msg": "MODULE FAILURE"}
-```
-
-You may be trying to run Algo with Python3. Algo uses [Ansible](https://github.com/ansible/ansible) which has issues with Python3, although this situation is improving over time. Try running Algo with Python2 to fix this issue. Open your terminal and `cd` to the directory with Algo, then run: ``virtualenv -p `which python2.7` env && source env/bin/activate && pip install -r requirements.txt``
+You are running an old version of `pip` that cannot download the binary `cryptography` dependency. Upgrade to a new version of `pip` by running `sudo python3 -m pip install -U pip`.
 
 ### Error: "ansible-playbook: command not found"
 
 You tried to install Algo and you see an error that reads "ansible-playbook: command not found."
 
-You did not finish step 4 in the installation instructions, "[Install Algo's remaining dependencies](https://github.com/trailofbits/algo#deploy-the-algo-server)." Algo depends on [Ansible](https://github.com/ansible/ansible), an automation framework, and this error indicates that you do not have Ansible installed. Ansible is installed by `pip` when you run `python -m pip install -r requirements.txt`. You must complete the installation instructions to run the Algo server deployment process.
+You did not finish step 4 in the installation instructions, "[Install Algo's remaining dependencies](https://github.com/trailofbits/algo#deploy-the-algo-server)." Algo depends on [Ansible](https://github.com/ansible/ansible), an automation framework, and this error indicates that you do not have Ansible installed. Ansible is installed by `pip` when you run `python3 -m pip install -r requirements.txt`. You must complete the installation instructions to run the Algo server deployment process.
+
+### Fatal: "Failed to validate the SSL certificate"
+
+You received a message like this:
+```
+fatal: [localhost]: FAILED! => {"changed": false, "msg": "Failed to validate the SSL certificate for api.digitalocean.com:443. Make sure your managed systems have a valid CA certificate installed. You can use validate_certs=False if you do not need to confirm the servers identity but this is unsafe and not recommended. Paths checked for this platform: /etc/ssl/certs, /etc/ansible, /usr/local/etc/openssl. The exception msg was: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1076).", "status": -1, "url": "https://api.digitalocean.com/v2/regions"}
+```
+
+Your local system does not have a CA certificate that can validate the cloud provider's API. Are you using MacPorts instead of Homebrew? The MacPorts openssl installation does not include a CA certificate, but you can fix this by installing the [curl-ca-bundle](https://andatche.com/articles/2012/02/fixing-ssl-ca-certificates-with-openssl-from-macports/) port with `port install curl-ca-bundle`. That should do the trick.
 
 ### Could not fetch URL ... TLSV1_ALERT_PROTOCOL_VERSION
 
@@ -139,9 +139,9 @@ No matching distribution found for SecretStorage<3 (from -r requirements.txt (li
 
 It's time to upgrade your python.
 
-`brew upgrade python2`
+`brew upgrade python3`
 
-You can also download python 2.7.x from python.org.
+You can also download python 3.7.x from python.org.
 
 ### Bad owner or permissions on .ssh
 
@@ -229,7 +229,7 @@ You tried to deploy Algo from Windows and you received an error like this one:
 
 ```
 TASK [cloud-azure : Create an instance].
-fatal: [localhost]: FAILED! => {"changed": false, 
+fatal: [localhost]: FAILED! => {"changed": false,
 "msg": "Error creating or updating virtual machine AlgoVPN - Azure Error:
 InvalidParameter\n
 Message: The value of parameter linuxConfiguration.ssh.publicKeys.keyData is invalid.\n
@@ -243,7 +243,7 @@ This is related to [the chmod issue](https://github.com/Microsoft/WSL/issues/81)
 You tried to deploy Algo from Docker and you received an error like this one:
 
 ```
-Failed to connect to the host via ssh: 
+Failed to connect to the host via ssh:
 Warning: Permanently added 'xxx.xxx.xxx.xxx' (ECDSA) to the list of known hosts.\r\n
 Control socket connect(/root/.ansible/cp/6d9d22e981): Connection refused\r\n
 Failed to connect to new control master\r\n
@@ -265,7 +265,7 @@ TASK [wireguard : Generate public keys] ****************************************
 [WARNING]: Unable to find 'configs/xxx.xxx.xxx.xxx/wireguard//private/dan' in expected paths.
 
 fatal: [localhost]: FAILED! => {"msg": "An unhandled exception occurred while running the lookup plugin 'file'. Error was a <class 'ansible.errors.AnsibleError'>, original message: could not locate file in lookup: configs/xxx.xxx.xxx.xxx/wireguard//private/dan"}
-``` 
+```
 This error is usually hit when using the local install option on a server that isn't Ubuntu 18.04. You should upgrade your server to Ubuntu 18.04. If this doesn't work, try removing `*.lock` files at /etc/wireguard/ as follows:
 
 ```ssh
@@ -412,64 +412,9 @@ sed -i -e 's/#*.dos_protection = yes/dos_protection = no/' /etc/strongswan.d/cha
 
 ### WireGuard: Clients can connect on Wifi but not LTE
 
-Certain cloud providers (like AWS Lightsail) don't assign an IPv6 address to your server, but certain cellular carriers (e.g. T-Mobile in the United States, [EE](https://community.ee.co.uk/t5/4G-and-mobile-data/IPv4-VPN-Connectivity/td-p/757881) in the United Kingdom) operate an IPv6-only network. This somehow leads to the Wireguard app not being able to make a connection when transitioning to cell service. Go to the Wireguard app on the device when you're having problems with cell connectivity and select "Export log file" or similar option. If you see a long string of error messages like "`Failed to send data packet write udp6 [::]:49727->[2607:7700:0:2a:0:1:354:40ae]:51820: sendto: no route to host` then you might be having this problem. 
+Certain cloud providers (like AWS Lightsail) don't assign an IPv6 address to your server, but certain cellular carriers (e.g. T-Mobile in the United States, [EE](https://community.ee.co.uk/t5/4G-and-mobile-data/IPv4-VPN-Connectivity/td-p/757881) in the United Kingdom) operate an IPv6-only network. This somehow leads to the Wireguard app not being able to make a connection when transitioning to cell service. Go to the Wireguard app on the device when you're having problems with cell connectivity and select "Export log file" or similar option. If you see a long string of error messages like "`Failed to send data packet write udp6 [::]:49727->[2607:7700:0:2a:0:1:354:40ae]:51820: sendto: no route to host` then you might be having this problem.
 
 Manually disconnecting and then reconnecting should restore your connection. To solve this, you need to either "force IPv4 connection" if available on your phone, or install an IPv4 APN, which might be available from your carrier tech support. T-mobile's is available [for iOS here under "iOS IPv4/IPv6 fix"](https://www.reddit.com/r/tmobile/wiki/index), and [here is a walkthrough for Android phones](https://www.myopenrouter.com/article/vpn-connections-not-working-t-mobile-heres-how-fix).
-
-### "Error 809" or IKE_AUTH requests that never make it to the server
-
-On Windows, this issue may manifest with an error message that says "The network connection between your computer and the VPN server could not be established because the remote server is not responding... This is Error 809." On other operating systems, you may try to debug the issue by capturing packets with tcpdump and notice that, while IKE_SA_INIT request and responses are exchanged between the client and server, IKE_AUTH requests never make it to the server.
-
-It is possible that the IKE_AUTH payload is too big to fit in a single IP datagram, and so is fragmented. Many consumer routers and cable modems ship with a feature that blocks "fragmented IP packets." Try logging into your router and disabling any firewall settings related to blocking or dropping fragmented IP packets. For more information, see [Issue #305](https://github.com/trailofbits/algo/issues/305).
-
-### Error: name 'basestring' is not defined
-
-```
-TASK [cloud-digitalocean : Creating a droplet...] *******************************************
-An exception occurred during task execution. To see the full traceback, use -vvv. The error was: NameError: name 'basestring' is not defined
-fatal: [localhost]: FAILED! => {"changed": false, "msg": "name 'basestring' is not defined"}
-```
-
-If you get something like the above it's likely you're not using a python2 virtualenv.
-
-Ensure running `python2.7` drops you into a python 2 shell (it looks something like this)
-
-```
-user@homebook ~ $ python2.7
-Python 2.7.10 (default, Feb  7 2017, 00:08:15)
-[GCC 4.2.1 Compatible Apple LLVM 8.0.0 (clang-800.0.34)] on darwin
-Type "help", "copyright", "credits" or "license" for more information.
->>>
-```
-
-Then rerun the dependency installation explicitly using python 2.7
-
-```
-python2.7 -m virtualenv --python=`which python2.7` env && source env/bin/activate && python2.7 -m pip install -U pip && python2.7 -m pip install -r requirements.txt
-```
-
-### Windows: Parameter is incorrect
-
-The problem may happen if you recently moved to a new server, where you have Algo VPN.
-
-1. Clear the Networking caches:
-	- Run CMD (click windows start menu, type 'cmd', right click on 'Command Prompt' and select "Run as Administrator").
-	- Type the commands below:
-	```
-	netsh int ip reset
-	netsh int ipv6 reset
-	netsh winsock reset
-	```
-
-3. Restart your computer
-4. Reset Device Manager adaptors:
-	- Open Device Manager
-	- Find Network Adapters
-	- Uninstall WAN Miniport drivers (IKEv2, IP, IPv6, etc)
-	- Click Action > Scan for hardware changes
-	- The adapters you just uninstalled should come back
-
-The VPN connection should work again
 
 ### IPsec: Difficulty connecting through router
 

@@ -4,9 +4,7 @@ Before you begin, make sure you have installed all the dependencies necessary fo
 
 You can deploy Algo non-interactively by running the Ansible playbooks directly with `ansible-playbook`.
 
-`ansible-playbook` accepts "tags" via the `-t` or `TAGS` options. You can pass tags as a list of comma separated values. Ansible will only run plays (install roles) with the specified tags. You can also use the `--skip-tags` option to skip certain parts of the install, such as `iptables` (overwrite iptables rules), `ipsec` (install strongSwan), `wireguard` (install Wireguard).
-
-`ansible-playbook` accepts variables via the `-e` or `--extra-vars` option. You can pass variables as space separated key=value pairs. Algo requires certain variables that are listed below.
+`ansible-playbook` accepts variables via the `-e` or `--extra-vars` option. You can pass variables as space separated key=value pairs. Algo requires certain variables that are listed below. You can also use the `--skip-tags` option to skip certain parts of the install, such as `iptables` (overwrite iptables rules), `ipsec` (install strongSwan), `wireguard` (install Wireguard). We don't recommend using the `-t` option as it will only include the tagged portions of the deployment, and skip certain necessary roles (such as `common`).
 
 Here is a full example for DigitalOcean:
 
@@ -17,8 +15,7 @@ ansible-playbook main.yml -e "provider=digitalocean
                                 ondemand_wifi=false
                                 dns_adblocking=true
                                 ssh_tunneling=true
-                                windows=false
-                                store_cakey=true
+                                store_pki=true
                                 region=ams3
                                 do_token=token"
 ```
@@ -34,7 +31,6 @@ See below for more information about variables and roles.
 - `ondemand_wifi_exclude` (Required if `ondemand_wifi` set) - WiFi networks to exclude from using the VPN. Comma-separated values
 - `dns_adblocking` - (Optional) Enables dnscrypt-proxy adblocking. Default: true
 - `ssh_tunneling` - (Optional) Enable SSH tunneling for each user. Default: false
-- `windows` - (Optional) Enables compatible ciphers and key exchange to support Windows clients, less secure. Default: false
 - `store_cakey` - (Optional) Whether or not keep the CA key (required to add users in the future, but less secure). Default: false
 
 If any of the above variables are unspecified, ansible will ask the user to input them.
@@ -45,13 +41,16 @@ Cloud roles can be activated by specifying an extra variable `provider`.
 
 Cloud roles:
 
-- role: cloud-digitalocean, provider: digitalocean
-- role: cloud-ec2,          provider: ec2
-- role: cloud-vultr,        provider: vultr
-- role: cloud-gce,          provider: gce
-- role: cloud-azure,        provider: azure
-- role: cloud-scaleway,     provider: scaleway
-- role: cloud-openstack,    provider: openstack
+- role: cloud-digitalocean, [provider: digitalocean](#digital-ocean)
+- role: cloud-ec2,          [provider: ec2](#amazon-ec2)
+- role: cloud-gce,          [provider: gce](#google-compute-engine)
+- role: cloud-vultr,        [provider: vultr](#vultr)
+- role: cloud-azure,        [provider: azure](#azure)
+- role: cloud-lightsail,    [provider: lightsail](#lightsail)
+- role: cloud-scaleway,     [provider: scaleway](#scaleway)
+- role: cloud-openstack,    [provider: openstack](#openstack)
+- role: cloud-cloudstack,   [provider: cloudstack](#cloudstack)
+- role: cloud-hetzner,      [provider: hetzner](#hetzner)
 
 Server roles:
 
@@ -59,7 +58,7 @@ Server roles:
   * Installs [strongSwan](https://www.strongswan.org/)
   * Enables AppArmor, limits CPU and memory access, and drops user privileges
   * Builds a Certificate Authority (CA) with [easy-rsa-ipsec](https://github.com/ValdikSS/easy-rsa-ipsec) and creates one client certificate per user
-  * Bundles the appropriate certificates into Apple mobileconfig profiles and Powershell scripts for each user
+  * Bundles the appropriate certificates into Apple mobileconfig profiles for each user
 - role: dns_adblocking
   * Installs DNS encryption through [dnscrypt-proxy](https://github.com/jedisct1/dnscrypt-proxy) with blacklists to be updated daily from `adblock_lists` in `config.cfg` - note this will occur even if `dns_encryption` in `config.cfg` is set to `false`
   * Constrains dnscrypt-proxy with AppArmor and cgroups CPU and memory limitations
@@ -184,8 +183,8 @@ Additional variables:
 
 Required variables:
 
-- gce_credentials_file
-- [region](https://cloud.google.com/compute/docs/regions-zones/)
+- gce_credentials_file: e.g. /configs/gce.json if you use the [GCE docs](https://trailofbits.github.io/algo/cloud-gce.html) - can also be defined in environment as GCE_CREDENTIALS_FILE_PATH
+- [region](https://cloud.google.com/compute/docs/regions-zones/): e.g. `useast-1`
 
 ### Vultr
 
@@ -242,11 +241,28 @@ Possible options can be gathered via cli `aws lightsail get-regions`
 Required variables:
 
 - [scaleway_token](https://www.scaleway.com/docs/generate-an-api-token/)
-- region: e.g. ams1, par1
+- region: e.g. `ams1`, `par1`
 
 ### OpenStack
 
 You need to source the rc file prior to run Algo. Download it from the OpenStack dashboard->Compute->API Access and source it in the shell (eg: source /tmp/dhc-openrc.sh)
+
+### CloudStack
+
+Required variables:
+
+- [cs_config](https://trailofbits.github.io/algo/cloud-cloudstack.html): /path/to/.cloudstack.ini
+- cs_region: e.g. `exoscale`
+- cs_zones: e.g. `ch-gva2`
+
+The first two can also be defined in your environment, using the variables `CLOUDSTACK_CONFIG` and `CLOUDSTACK_REGION`.
+
+### Hetzner
+
+Required variables:
+
+- hcloud_token: Your [API token](https://trailofbits.github.io/algo/cloud-hetzner.html#api-token) - can also be defined in the environment as HCLOUD_TOKEN
+- region: e.g. `nbg1`
 
 ### Update users
 

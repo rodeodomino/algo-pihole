@@ -1,5 +1,5 @@
 {% set subnets = ([strongswan_network] if ipsec_enabled else []) + ([wireguard_network_ipv4] if wireguard_enabled else []) %}
-{% set ports = (['500', '4500'] if ipsec_enabled else []) + ([wireguard_port] if wireguard_enabled else []) %}
+{% set ports = (['500', '4500'] if ipsec_enabled else []) + ([wireguard_port] if wireguard_enabled else []) + ([wireguard_port_actual] if wireguard_enabled and wireguard_port|int == wireguard_port_avoid|int else []) %}
 
 #### The mangle table
 # This table allows us to modify packet headers
@@ -29,6 +29,11 @@ COMMIT
 :PREROUTING ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
 
+{% if wireguard_enabled and wireguard_port|int == wireguard_port_avoid|int %}
+# Handle the special case of allowing access to WireGuard over an already used
+# port like 53
+-A PREROUTING --in-interface {{ ansible_default_ipv4['interface'] }} -p udp --dport {{ wireguard_port_avoid }} -j REDIRECT --to-port {{ wireguard_port_actual }}
+{% endif %}
 # Allow traffic from the VPN network to the outside world, and replies
 -A POSTROUTING -s {{ subnets|join(',') }} -m policy --pol none --dir out -j MASQUERADE
 
@@ -94,10 +99,10 @@ COMMIT
 # Forward any packet that's part of an established connection
 -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 # Drop SMB/CIFS traffic that requests to be forwarded
--A FORWARD -p tcp --dport 445 -j DROP
+-A FORWARD -p tcp --dport 445 -j {{ "DROP" if block_smb else "ACCEPT" }}
 # Drop NETBIOS trafic that requests to be forwarded
--A FORWARD -p udp -m multiport --ports 137,138 -j DROP
--A FORWARD -p tcp -m multiport --ports 137,139 -j DROP
+-A FORWARD -p udp -m multiport --ports 137,138 -j {{ "DROP" if block_netbios else "ACCEPT" }}
+-A FORWARD -p tcp -m multiport --ports 137,139 -j {{ "DROP" if block_netbios else "ACCEPT" }}
 
 {% if ipsec_enabled %}
 # Forward any IPSEC traffic from the VPN network

@@ -86,8 +86,7 @@ ansible-playbook main.yml -e "provider=digitalocean
                                 ondemand_wifi=true
                                 dns_adblocking=true
                                 ssh_tunneling=false
-                                windows=false
-                                store_cakey=true
+                                store_pki=true
                                 region=nyc3
                                 do_token=token"
 ```
