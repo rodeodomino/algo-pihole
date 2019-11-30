@@ -20,7 +20,7 @@
 
     - name: Download pihole installer
       get_url:
-          url: https://install.pi-hole.net
+          url: https://raw.githubusercontent.com/pi-hole/pi-hole/master/automated%20install/basic-install.sh 
           dest: ~/install-pihole.sh
           mode: 0740
 
