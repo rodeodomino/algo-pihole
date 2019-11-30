@@ -12,6 +12,11 @@
         tags: common
 
       - import_role:
+          name: dns
+        when: dns_encryption
+        tags: dns
+
+      - import_role:
           name: pihole
         when: algo_dns_adblocking
         tags: dns_adblocking
