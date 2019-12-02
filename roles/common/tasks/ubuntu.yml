@@ -90,9 +90,6 @@
       - cgroup-tools
       - openssl
       - gnupg2
-      - php-cgi
-      - php-sqlite3
-      - resolvconf
     sysctl:
       - item: net.ipv4.ip_forward
         value: 1
