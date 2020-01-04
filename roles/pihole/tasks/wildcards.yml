@@ -17,8 +17,8 @@
 
 - name: Pi-hole wildcard tools | Download gravity optimizer
   get_url:
-    url: https://raw.githubusercontent.com/mmotti/pihole-gravity-optimise/master/gravityOptimise.sh
-    dest: /usr/local/bin/gravityOptimise.sh
+    url: https://raw.githubusercontent.com/mmotti/pihole-gravity-optimise/master/gravityOptimise.py
+    dest: /usr/local/bin/gravityOptimise.py
     owner: root
     group: root
     mode: 0755
@@ -37,5 +37,5 @@
   changed_when: false
 
 - name: Pi-hole wildcard tools | Run gravityOptimise
-  command: /usr/local/bin/gravityOptimise.sh
+  command: "python3 /usr/local/bin/gravityOptimise.py"
   changed_when: false
