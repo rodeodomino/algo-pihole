@@ -18,4 +18,4 @@ wireguard_client_ip: >-
 wireguard_server_ip: >-
   {{ wireguard_network_ipv4 | ipaddr('1') }}
   {{ ',' + wireguard_network_ipv6 | ipaddr('1') if ipv6_support else '' }}
-dns_allowed_ips: {{ local_service_ip }}{{ ', ' + local_service_ipv6 if ipv6_support else '' }}
+dns_allowed_ips: "{{ local_service_ip }}{{ ', ' + local_service_ipv6 if ipv6_support else '' }}"
