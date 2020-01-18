@@ -15,7 +15,7 @@ fi
 # IPsec
 #
 
-if sudo openssl crl -inform pem -noout -text -in configs/10.0.8.100/ipsec/.pki/crl/phone.crt | grep CRL
+if sudo openssl crl -inform pem -noout -text -in configs/10.0.8.100/ipsec/.pki/crl/phone-full.crt | grep CRL
   then
     echo "The CRL check passed"
   else

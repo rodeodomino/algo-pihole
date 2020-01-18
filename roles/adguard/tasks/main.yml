@@ -37,6 +37,15 @@
     mode: 0644
     force: yes
 
+- name: Install AdGuardHome
+  command: "{{ adguard_home_executable }} -s install"
+  become: yes
+  become_user: "{{ adguard_home_user }}"
+  changed_when: false
+  notify:
+   - restart systemd-resolved
+   - restart AdGuardHome
+
 - name: Ensure that the AdGuardHome service directory exist
   file:
     path: /etc/systemd/resolved.conf.d/
@@ -53,17 +62,15 @@
       DNS=127.0.0.1
       DNSStubListener=no
 
-- name: Install AdGuardHome
-  command: "{{ adguard_home_executable }} -s install"
-  become: yes
-  become_user: "{{ adguard_home_user }}"
-  changed_when: false
-  notify:
-   - restart systemd-resolved
-   - restart AdGuardHome
-
 - name: Set AdGuardHome permissions
   command: "setcap CAP_NET_BIND_SERVICE=+eip {{ adguard_home_executable }}"
   become: yes
   become_user: "{{ adguard_home_user }}"
   changed_when: false
+
+- name: Add hostname to hosts
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ ansible_default_ipv4.address }} {{ ansible_hostname }}.{{ ansible_facts['domain'] }} {{ ansible_hostname }}"
+
+- meta: flush_handlers
