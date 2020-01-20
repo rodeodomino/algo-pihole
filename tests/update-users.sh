@@ -2,7 +2,7 @@
 
 set -ex
 
-USER_ARGS="{ 'server': '10.0.8.100', 'users': ['desktop', 'user1', 'user2'], 'local_service_ip': '172.16.0.1' }"
+USER_ARGS="{ 'server': '10.0.8.100', 'users': ['laptop-full', 'user1', 'user2'], 'local_service_ip': '172.16.0.1' }"
 
 if [ "${DEPLOY}" == "docker" ]
 then
@@ -15,7 +15,7 @@ fi
 # IPsec
 #
 
-if sudo openssl crl -inform pem -noout -text -in configs/10.0.8.100/ipsec/.pki/crl/phone.crt | grep CRL
+if sudo openssl crl -inform pem -noout -text -in configs/10.0.8.100/ipsec/.pki/crl/phone-full.crt | grep CRL
   then
     echo "The CRL check passed"
   else

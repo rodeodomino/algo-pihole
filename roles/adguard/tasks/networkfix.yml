@@ -1,0 +1,42 @@
+---
+- name: Ensure that the AdGuardHome service directory exist
+  file:
+    path: /etc/systemd/resolved.conf.d/
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Disable DNSStubListener
+  copy:
+    dest: /etc/systemd/resolved.conf.d/adguardhome.conf
+    content: |
+      [Resolve]
+      DNS=127.0.0.1
+      DNSStubListener=no
+
+- name: Backup existing resolv.conf file
+  command: "mv /etc/resolv.conf /etc/resolv.conf.backup"
+  become: yes
+  become_user: "{{ adguard_home_user }}"
+  changed_when: false
+
+- name: Link alternative resolv.conf
+  file:
+    src: "/run/systemd/resolve/resolv.conf"
+    dest: "/etc/resolv.conf"
+    state: link
+  notify:
+   - restart systemd-resolved
+   - restart AdGuardHome
+
+- name: Restart services
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+    daemon_reload: true
+  with_items:
+    - systemd-resolved
+    - AdGuardHome
+
+- meta: flush_handlers

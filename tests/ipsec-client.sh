@@ -6,7 +6,7 @@ xmllint --noout ./configs/10.0.8.100/ipsec/apple/user1.mobileconfig
 
 ansible-playbook deploy_client.yml \
   -e client_ip=localhost \
-  -e vpn_user=desktop \
+  -e vpn_user=laptop-full \
   -e server_ip=10.0.8.100 \
   -e rightsubnet='172.16.0.1/32'
 
