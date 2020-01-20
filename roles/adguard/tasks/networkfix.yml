@@ -22,10 +22,9 @@
   changed_when: false
 
 - name: Link alternative resolv.conf
-  file:
-    src: "/run/systemd/resolve/resolv.conf"
-    dest: "/etc/resolv.conf"
-    state: link
+  command: "ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf"
+  become: yes
+  become_user: "{{ adguard_home_user }}"
   notify:
    - restart systemd-resolved
    - restart AdGuardHome
