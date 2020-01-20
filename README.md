@@ -1,3 +1,14 @@
+# Algo VPN - AdGuardHome Fork
+
+[![](https://github.com/rodeodomino/algo-adguard/workflows/Main/badge.svg?branch=master)](https://github.com/rodeodomino/algo-adguard/actions)
+
+This is a fork of [@trailofbits](https://github.com/trailofbits) amazing work with [Algo](https://github.com/trailofbits/algo), replacing their local dnscrypt-proxy ad blocking with AdGuardHome.
+
+In addition to installing AdGuardHome, it allows for full tunneling and dns-only split tunneling.
+
+Split tunneling caveats:
+* **Split tunneling only works with WireGuard** – if you can figure out how to make this work with StrongSwan, I would love to chat.
+
 # Algo VPN
 
 [![Join the chat at https://gitter.im/trailofbits/algo](https://badges.gitter.im/trailofbits/algo.svg)](https://gitter.im/trailofbits/algo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
