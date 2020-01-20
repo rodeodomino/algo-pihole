@@ -22,9 +22,10 @@
   changed_when: false
 
 - name: Link alternative resolv.conf
-  command: "ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf"
-  become: yes
-  become_user: "{{ adguard_home_user }}"
+  file:
+    src: "/run/systemd/resolve/resolv.conf"
+    dest: "/etc/resolv.conf"
+    state: link
   notify:
    - restart systemd-resolved
    - restart AdGuardHome
@@ -33,5 +34,14 @@
   lineinfile:
     dest: /etc/hosts
     line: "{{ ansible_default_ipv4.address }} {{ ansible_hostname }}.{{ ansible_facts.dns.search.0 }} {{ ansible_hostname }}"
+
+- name: Restart services
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+    daemon_reload: true
+  with_items:
+    - systemd-resolved
+    - AdGuardHome
 
 - meta: flush_handlers
