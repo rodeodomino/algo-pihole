@@ -31,9 +31,12 @@ dns:
   safebrowsing_block_host: standard-block.dns.adguard.com
   cache_size: 4194304
   upstream_dns:
-  {% for d in adguard_dns_servers %}
-  - {{ d }}
-  {% endfor -%}
+  - https://dns.google/dns-query
+  - tls://8.8.8.8
+  - tls://8.8.4.4
+  - https://dns.cloudflare.com/dns-query
+  - tls://1.1.1.1
+  - tls://1.0.0.1
   filtering_enabled: true
   filters_update_interval: 24
   parental_sensitivity: 0
@@ -58,14 +61,90 @@ tls:
   certificate_path: ""
   private_key_path: ""
 filters:
-{% for n in adblock_lists -%}
-{% set index = loop.index %}
 - enabled: true
-  url: {{ n['url'] }}
-  name: {{ n['name'] }}
-  id: {{ index|int }}
-{% endfor %}
+  url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
+  name: AdGuard Simplified Domain Names filter
+  id: 1
+- enabled: true
+  url: https://adaway.org/hosts.txt
+  name: AdAway
+  id: 2
+- enabled: true
+  url: https://hosts-file.net/ad_servers.txt
+  name: hpHosts - Ad and Tracking servers only
+  id: 3
+- enabled: true
+  url: https://www.malwaredomainlist.com/hostslist/hosts.txt
+  name: MalwareDomainList.com Hosts List
+  id: 4
+- enabled: true
+  url: https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+  name: Steven Black Hosts
+  id: 5
+- enabled: true
+  url: http://sysctl.org/cameleon/hosts
+  name: Cameleon
+  id: 6
+- enabled: true
+  url: https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
+  name: Disconnect Simple Tracking
+  id: 7
+- enabled: true
+  url: https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
+  name: Disconnect Simple Ads
+  id: 8
+- enabled: true
+  url: https://pgl.yoyo.org/adservers/serverlist.php?hostformat=adblockplus&showintro=0&mimetype=plaintext
+  name: Peter Lowe's list
+  id: 9
+- enabled: true
+  url: https://reddestdream.github.io/Projects/MinimalHosts/etc/MinimalHostsBlocker/minimalhosts
+  name: Minimal Hosts
+  id: 10
+- enabled: true
+  url: https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt
+  name: Anudeep ND
+  id: 11
+- enabled: true
+  url: https://someonewhocares.org/hosts/hosts
+  name: Dan Pollock's list
+  id: 12
+- enabled: true
+  url: https://www.squidblacklist.org/downloads/dg-ads.acl
+  name: Squid Blacklist
+  id: 13
+- enabled: true
+  url: https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
+  name: Disconnect Simple Malvertising
+  id: 15
+- enabled: true
+  url: https://zerodot1.gitlab.io/CoinBlockerLists/hosts
+  name: Coinblocker
+  id: 16
+- enabled: true
+  url: https://raw.githubusercontent.com/jerryn70/GoodbyeAds/master/Formats/GoodbyeAds-AdBlock-Filter.txt
+  name: Goodbye Ads
+  id: 1576635076
+- enabled: true
+  url: https://raw.githubusercontent.com/Strappazzon/filterlists/master/Filterlists/Tracking.txt
+  name: Strappazzon's Tracking list
+  id: 1576779870
+- enabled: true
+  url: https://raw.githubusercontent.com/rodeodomino/Scripts/master/Filters/AdGuardHome.txt
+  name: Personal filters
+  id: 1577993820
+- enabled: true
+  url: https://raw.githubusercontent.com/mmotti/adguard-home-filters/master/regex.txt
+  name: MMotti AdguardHome - regex.txt
+  id: 1579088131
+- enabled: true
+  url: https://raw.githubusercontent.com/mmotti/adguard-home-filters/master/filters.txt
+  name: MMotti AdguardHome - filters.txt
+  id: 1579393166
 user_rules:
+- '@@||chowhound.com^$important'
+- '@@||traffic.omny.fm^$important'
+- '@@||link.morningbrew.com^$important'
 - ""
 dhcp:
   enabled: false
@@ -77,21 +156,54 @@ dhcp:
   lease_duration: 86400
   icmp_timeout_msec: 1000
 clients:
-{% for u in users -%}
-{% set index = loop.index %}
-- name: {{ u }}
+- name: Phone - DNS Only
   ids:
-  - {{ wireguard_network_ipv4 | ipaddr(index|int+1) | ipv4('address') }}
-  - {{ wireguard_network_ipv6 | ipaddr(index|int+1) | ipv6('address') }}
+  - 10.19.49.2
+  - fd9d:bc11:4021::2
   use_global_settings: true
   filtering_enabled: false
   parental_enabled: false
-  safebrowsing_enabled: false
   safesearch_enabled: false
+  safebrowsing_enabled: false
   use_global_blocked_services: true
   blocked_services: []
   upstreams: []
-{% endfor %}
+- name: Laptop - DNS Only
+  ids:
+  - 10.19.49.3
+  - fd9d:bc11:4021::3
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: Phone - Full
+  ids:
+  - 10.19.49.4
+  - fd9d:bc11:4021::4
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: Laptop - Full
+  ids:
+  - 10.19.49.5
+  - fd9d:bc11:4021::5
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
 log_file: ""
 verbose: false
 schema_version: 6
