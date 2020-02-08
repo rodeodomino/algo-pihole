@@ -46,9 +46,12 @@
       - import_role:
           name: dns
         when:
-          - algo_dns_adblocking or
-            dns_encryption
+          - dns_encryption
         tags: dns
+
+      - import_role:
+          name: pihole
+        tags: pihole
 
       - import_role:
           name: wireguard
