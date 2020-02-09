@@ -12,26 +12,6 @@ else
 fi
 
 #
-# IPsec
-#
-
-if sudo openssl crl -inform pem -noout -text -in configs/10.0.8.100/ipsec/.pki/crl/phone.crt | grep CRL
-  then
-    echo "The CRL check passed"
-  else
-    echo "The CRL check failed"
-    exit 1
-fi
-
-if sudo openssl x509 -inform pem -noout -text -in configs/10.0.8.100/ipsec/.pki/certs/user1.crt | grep -E "CN(=|\s+=\s+)user1"
-  then
-    echo "The new user exists"
-  else
-    echo "The new user does not exist"
-    exit 1
-fi
-
-#
 # WireGuard
 #
 
@@ -40,17 +20,5 @@ if sudo test -f configs/10.0.8.100/wireguard/user1.conf
     echo "WireGuard: The new user exists"
   else
     echo "WireGuard: The new user does not exist"
-    exit 1
-fi
-
-#
-# SSH tunneling
-#
-
-if sudo test -f configs/10.0.8.100/ssh-tunnel/user1.ssh_config
-  then
-    echo "SSH Tunneling: The new user exists"
-  else
-    echo "SSH Tunneling: The new user does not exist"
     exit 1
 fi

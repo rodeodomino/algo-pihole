@@ -91,15 +91,7 @@
 - name: Set OS specific facts
   set_fact:
     tools:
-      - git
-      - screen
-      - apparmor-utils
-      - uuid-runtime
-      - coreutils
       - iptables-persistent
-      - cgroup-tools
-      - openssl
-      - gnupg2
     sysctl:
       - item: net.ipv4.ip_forward
         value: 1
@@ -117,7 +109,6 @@
 - name: Install headers
   apt:
     name:
-      - linux-headers-generic
       - "linux-headers-{{ ansible_kernel }}"
     state: present
   when: install_headers
