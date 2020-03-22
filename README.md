@@ -1,8 +1,22 @@
+Algo VPN - Pi-hole Fork
+
+[![](https://github.com/rodeodomino/algo-pihole/workflows/Main/badge.svg?branch=master)](https://github.com/rodeodomino/algo-pihole/actions)
+
+This is a fork of [@trailofbits](https://github.com/trailofbits) amazing work with [Algo](https://github.com/trailofbits/algo), replacing their local dnsmasq ad blocking with Pi-hole with [@dan-v](https://github.com/dan-v)'s [Pi-hole](https://github.com/dan-v/algo) code.
+
+In addition to installing Pi-hole, it:
+* Creates extra users for full tunneling and dns-only split tunneling.
+* Checks for Pi-hole updates.
+
+Split tunneling caveats:
+* **Split tunneling only works with WireGuard** – if you can figure out how to make this work with StrongSwan, I would love to chat.
+
+----------------
+
 # Algo VPN
 
 [![Join the chat at https://gitter.im/trailofbits/algo](https://badges.gitter.im/trailofbits/algo.svg)](https://gitter.im/trailofbits/algo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40AlgoVPN)](https://twitter.com/AlgoVPN)
-[![](https://github.com/trailofbits/algo/workflows/Main/badge.svg?branch=master)](https://github.com/trailofbits/algo/actions)
 
 Algo VPN is a set of Ansible scripts that simplify the setup of a personal WireGuard and IPsec VPN. It uses the most secure defaults available and works with common cloud providers. See our [release announcement](https://blog.trailofbits.com/2016/12/12/meet-algo-the-vpn-that-works/) for more information.
 

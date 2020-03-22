@@ -1,0 +1,21 @@
+---
+- name: Change DNSCrypt-Proxy socket port
+  replace:
+    path: /lib/systemd/system/dnscrypt-proxy.socket
+    regexp: '127.0.2.1:53'
+    replace: '127.0.2.1:5353'
+  when: ansible_distribution == 'Ubuntu'
+
+- name: restart dnscrypt-proxy.socket
+  systemd:
+    name: dnscrypt-proxy.socket
+    state: restarted
+    daemon_reload: true
+  when: ansible_distribution == 'Ubuntu'
+
+- name: restart dnscrypt-proxy
+  systemd:
+    name: dnscrypt-proxy
+    state: restarted
+    daemon_reload: true
+  when: ansible_distribution == 'Ubuntu'
