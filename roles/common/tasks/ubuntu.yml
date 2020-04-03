@@ -36,31 +36,14 @@
       become: false
   when: algo_provider != "local"
 
+- name: Set timezone to America/New_York
+  timezone:
+    name: America/New_York
+  become: yes
+  become_method: sudo
+
 - name: Include unatteded upgrades configuration
   import_tasks: unattended-upgrades.yml
-
-- name: Disable MOTD on login and SSHD
-  replace: dest="{{ item.file }}" regexp="{{ item.regexp }}" replace="{{ item.line }}"
-  with_items:
-    - { regexp: '^session.*optional.*pam_motd.so.*', line: '# MOTD DISABLED', file: '/etc/pam.d/login' }
-    - { regexp: '^session.*optional.*pam_motd.so.*', line: '# MOTD DISABLED', file: '/etc/pam.d/sshd' }
-
-- name: Loopback for services configured
-  template:
-    src: 10-algo-lo100.network.j2
-    dest: /etc/systemd/network/10-algo-lo100.network
-  notify:
-    - restart systemd-networkd
-
-- name: systemd services enabled and started
-  systemd:
-    name: "{{ item }}"
-    state: started
-    enabled: true
-    daemon_reload: true
-  with_items:
-    - systemd-networkd
-    - systemd-resolved
 
 - meta: flush_handlers
 
@@ -81,15 +64,7 @@
 - name: Set OS specific facts
   set_fact:
     tools:
-      - git
-      - screen
-      - apparmor-utils
-      - uuid-runtime
-      - coreutils
       - iptables-persistent
-      - cgroup-tools
-      - openssl
-      - gnupg2
     sysctl:
       - item: net.ipv4.ip_forward
         value: 1
@@ -107,7 +82,6 @@
 - name: Install headers
   apt:
     name:
-      - linux-headers-generic
       - "linux-headers-{{ ansible_kernel }}"
     state: present
   when: install_headers

@@ -1,17 +1,16 @@
 ---
-- name: WireGuard repository configured
+- name: Install Wireguard repo (Debian)
   apt_repository:
-    repo: ppa:wireguard/wireguard
+    repo: 'deb http://deb.debian.org/debian buster-backports main'
     state: present
-  register: result
-  until: result is succeeded
-  retries: 10
-  delay: 3
+    update_cache: yes
+  when: ansible_distribution == 'Debian'
 
 - name: WireGuard installed
   apt:
     name: wireguard
     state: present
+    default_release: buster-backports
     update_cache: true
 
 - name: WireGuard reload-module-on-update
